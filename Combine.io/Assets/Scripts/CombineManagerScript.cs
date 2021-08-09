@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class CombineManagerScript : MonoBehaviour
 {
-    private int ChickenCount;
+  
+    
+    private int ChickenTotalCount;
+
+    
+    private int ChickenCount; //for box output
+    
+
+
     [SerializeField] private GameObject ChickenBox;
     [SerializeField] private GameObject ChickenBoxParent;
     [SerializeField] private bool ParentCreated;
@@ -21,9 +29,14 @@ public class CombineManagerScript : MonoBehaviour
     //DIE STUFF
     [SerializeField] private GameObject BrokenCombine;
     [SerializeField] private GameObject BrokenChickenBox;
-
+    private SpawnerScript spawnerscript;
     //Leveling stuff
 
+
+    private void OnEnable()
+    {
+        spawnerscript = FindObjectOfType<SpawnerScript>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -80,10 +93,11 @@ public class CombineManagerScript : MonoBehaviour
             if (collider.gameObject.layer == 9)
             {
                 ChickenCount++;
+                ChickenTotalCount++;
                 collider.transform.GetComponent<ChickenScript>().Die();
             }
 
-            // 11TH LAYER IS PLAYER LAYE AND 15TH LAYER IS ENEMYCOMBINE LAYER
+            // 11TH LAYER IS PLAYER LAYER AND 15TH LAYER IS ENEMYCOMBINE LAYER
             if (collider.gameObject.layer == 15 || collider.gameObject.layer == 11)
             {
                 //collider.GetComponent<CombineManagerScript>().Die();
@@ -94,6 +108,35 @@ public class CombineManagerScript : MonoBehaviour
 
     public void Die()
     {
+
+
+
+        //BROKE CHICKENS
+        if(ParentInstance != null)
+        {
+            foreach (Transform _ChickenBox in ParentInstance.transform)
+            {
+
+                GameObject _BrokenChickenBox = Instantiate(BrokenChickenBox, _ChickenBox.transform.position, _ChickenBox.transform.rotation);
+
+                MeshRenderer[] _BrokenChickenRenderers = _BrokenChickenBox.GetComponentsInChildren<MeshRenderer>();
+
+                foreach (MeshRenderer renderer in _BrokenChickenRenderers)
+                {
+                    renderer.materials[0].color = CombineColor;
+                }
+                Destroy(_BrokenChickenBox, 3f);
+                Destroy(_ChickenBox.gameObject);
+
+                spawnerscript.ChickenSpawn(ChickenTotalCount, _ChickenBox.transform.position);
+            }
+        }
+
+
+
+
+
+
         GameObject _BrokenCombine = Instantiate(BrokenCombine, transform.position, transform.rotation);
 
 
@@ -110,18 +153,6 @@ public class CombineManagerScript : MonoBehaviour
         Destroy(_BrokenCombine, 3f);
         Destroy(this.gameObject);
 
-        //BROKE CHICKENS
-        foreach(Transform _ChickenBox in ParentInstance.transform)
-        {
-            
-            GameObject _BrokenChickenBox = Instantiate(BrokenChickenBox, _ChickenBox.transform.position, Quaternion.identity);
-
-            MeshRenderer _BrokenChickenBoxRenderer = _ChickenBox.GetComponentInChildren<MeshRenderer>();
-            _BrokenChickenBoxRenderer.materials[0].color = CombineColor;
-            _BrokenChickenBoxRenderer.materials[1].color = CombineColor;
-            Destroy(_ChickenBox);
-            //spawn chickens
-        }
 
 
     }

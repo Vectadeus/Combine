@@ -4,47 +4,72 @@ using UnityEngine;
 
 public class SpawnerScript : MonoBehaviour
 {
-    public GameObject Chicken;
-    public GameObject ChickenParent;
-    public Vector3 RandomRangePos;
-    private Vector3 randomPos;
+    [SerializeField] private GameObject Chicken;
+    [SerializeField] private GameObject ChickenParent;
+    [SerializeField] private Vector3 RandomRangePos;
+    [SerializeField] private int AmountOfChicken;
+    [SerializeField] private LayerMask SpawnMask;
 
-    public int _ChickenAmount;
+    private Vector3 randomPos;
     private int ChickenAmount;
-    public LayerMask SpawnMask;
     private int ChickenSpawned;
 
 
     void Start()
+    {
+        ChickenSpawn(AmountOfChicken , transform.position);
+
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            //chickenamount
+
+            Debug.Log(ChickenParent.transform.childCount);
+
+
+        }
+    }
+
+    public void ChickenSpawn(int _ChickenAmount , Vector3 centerPos)
     {
         ChickenAmount = _ChickenAmount;
 
         for (int i = 0; i < ChickenAmount; i++)
         {
 
-            randomPos = new Vector3(Random.Range(RandomRangePos.x, -RandomRangePos.x), 0.5f, Random.Range(RandomRangePos.z, -RandomRangePos.z));
+            randomPos = centerPos + new Vector3(Random.Range(RandomRangePos.x, -RandomRangePos.x), 0.5f, Random.Range(RandomRangePos.z, -RandomRangePos.z));
 
             RaycastHit[] rayHits;
 
             rayHits = Physics.RaycastAll(randomPos, Vector3.down, SpawnMask);
 
-            if(rayHits[0].transform.gameObject.layer == 13)
+
+            if (rayHits.Length >= 0)
             {
-                GameObject _Chicken = Instantiate(Chicken, randomPos, Quaternion.identity);
-                _Chicken.transform.SetParent(ChickenParent.transform);
-                ChickenSpawned++;
-            }
-            else
-            {
-                if (ChickenAmount <= 2000 && ChickenSpawned <= _ChickenAmount)
+                Debug.Log(rayHits.Length);
+
+                if (rayHits[0].transform.gameObject.layer == 13)
                 {
-                    ChickenAmount++;
+                    GameObject _Chicken = Instantiate(Chicken, randomPos, Quaternion.identity);
+                    _Chicken.transform.SetParent(ChickenParent.transform);
+                    ChickenSpawned++;
+                }
+                else
+                {
+                    if (ChickenAmount <= 2000 && ChickenSpawned <= _ChickenAmount)
+                    {
+                        ChickenAmount++;
+                    }
                 }
             }
+
+            
         }
 
         Debug.Log(ChickenSpawned);
     }
-
 
 }//CLASS
