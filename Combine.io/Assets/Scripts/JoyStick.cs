@@ -6,14 +6,14 @@ using UnityEngine;
 
 public class JoyStick : MonoBehaviour
 {
+    //Used in playermovement
     public Transform JoyTransform;
-    public Transform JoyBackgroundTransform;
-    public float maxDistance;
 
 
-    public Vector3 MouseCenterPoint;
-    public float MouseDistance;
-    public float MouseDistanceRatio;
+    [SerializeField] private float maxDistance;
+    private Vector3 MouseCenterPoint;
+    private float MouseDistance;
+    private float MouseDistanceRatio;
 
 
 

@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class ChickenScript : MonoBehaviour
 {
-    public float ChickenSpeed;
-    public float RotSpeed;
-    public Vector3 RandomDirection;
-
-    public GameObject Particles;
-
+    [SerializeField] private float ChickenSpeed;
+    [SerializeField] private float RotSpeed;
+    [SerializeField] private GameObject Particles;
 
     // A.I STUFF
-    public float SphereRadius;
-    public LayerMask ObstacleMask;
+    [SerializeField] private float SphereRadius;
+    [SerializeField] private LayerMask ObstacleMask;
 
 
+    private Vector3 RandomDirection;
 
 
     // Start is called before the first frame update
@@ -46,6 +44,7 @@ public class ChickenScript : MonoBehaviour
     public void Die()
     {
         GameObject _Particles = Instantiate(Particles, transform.position, Quaternion.identity);
+        Destroy(this.gameObject);
     }
 
     IEnumerator ChangeDirection()

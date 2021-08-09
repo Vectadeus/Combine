@@ -4,20 +4,15 @@ using UnityEngine;
 
 public class EnemyCombineMovement : MonoBehaviour
 {
-    //
 
-    public float CombineSpeed;
-    public float CombineRotSpeed;
-    public Vector3 RandomDirection;
-    public float RayLength;
-    public LayerMask ObstacleMask;
+    [SerializeField] private float CombineSpeed;
+    [SerializeField] private float CombineRotSpeed;
+    [SerializeField] private float RayLength;
+    [SerializeField] private LayerMask ObstacleMask;
+    [SerializeField] private Transform RayTransform;
 
-
-    //Move With rigidbody
+    private Vector3 RandomDirection;
     private Rigidbody rb;
-
-    //RaycastStuff
-    public Transform RayTransform;
 
 
 
@@ -65,19 +60,16 @@ public class EnemyCombineMovement : MonoBehaviour
             {
                 int GoRandom;
                 GoRandom = Random.Range(0, 1);
-                Debug.Log(GoRandom);
 
                 if(GoRandom == 0)
                 {
                     Vector3 _NewDir = -transform.right;
                     RandomDirection = _NewDir;
-                    Debug.Log(_NewDir);
                 }
                 else
                 {
                     Vector3 _NewDir = transform.right;
                     RandomDirection = _NewDir;
-                    Debug.Log(_NewDir);
                 }
             }
         }

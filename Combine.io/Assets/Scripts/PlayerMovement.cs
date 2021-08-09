@@ -10,19 +10,15 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float speed;
     [SerializeField] private float RotSpeed;
-    [SerializeField] private JoyStick joyStick;
-    public bool IsMoving;
+    private JoyStick joyStick;
+    private bool IsMoving;
     private Rigidbody rb;
 
     //WHEEL ROTATION STUFF
-    public Transform[] Wheels = new Transform[3];
-    public float WheelRotSpeed;
+    [SerializeField] private Transform[] Wheels = new Transform[3];
+    [SerializeField] private float WheelRotSpeed;
 
 
-    //EAT STUFF
-    public Transform EatBoxCenter;
-    public Vector3 EatBoxSize;
-    public LayerMask EatBoxMask;
 
     private void OnEnable()
     {

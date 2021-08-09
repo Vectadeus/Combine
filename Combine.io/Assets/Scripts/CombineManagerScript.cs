@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class CombineManagerScript : MonoBehaviour
 {
-    public int ChickenCount;
-    public GameObject ChickenBox;
-    public GameObject ChickenBoxParent;
-    public bool ParentCreated;
-    public Transform ChickenBoxPoint;
+    private int ChickenCount;
+    [SerializeField] private GameObject ChickenBox;
+    [SerializeField] private GameObject ChickenBoxParent;
+    [SerializeField] private bool ParentCreated;
+    [SerializeField] Transform ChickenBoxPoint;
+    private GameObject ParentInstance;
+    private Color CombineColor;
 
 
     //EAT STUFF
-    public Transform EatBoxCenter;
-    public Vector3 EatBoxSize;
-    public LayerMask EatBoxMask;
+    [SerializeField] private Transform EatBoxCenter;
+    [SerializeField] private Vector3 EatBoxSize;
+    [SerializeField] private LayerMask EatBoxMask;
 
+    //DIE STUFF
+    [SerializeField] private GameObject BrokenCombine;
+    [SerializeField] private GameObject BrokenChickenBox;
 
     //Leveling stuff
-
-
-    //TEST
-    private GameObject ParentInstance;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,12 @@ public class CombineManagerScript : MonoBehaviour
     {
         CombineEat();
         ChickenBoxManage();
+
+        //Die test
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Die();
+        }
     }
 
 
@@ -52,7 +59,7 @@ public class CombineManagerScript : MonoBehaviour
             GameObject _ChickenBox = Instantiate(ChickenBox, ChickenBoxPoint.position, transform.rotation);
             _ChickenBox.transform.SetParent(ParentInstance.transform);
 
-            Color CombineColor = GetComponentInChildren<MeshRenderer>().materials[0].color;
+             CombineColor = GetComponentInChildren<MeshRenderer>().materials[0].color;
             _ChickenBox.GetComponentInChildren<MeshRenderer>().materials[0].color = CombineColor;
             _ChickenBox.GetComponentInChildren<MeshRenderer>().materials[1].color = CombineColor;
 
@@ -74,9 +81,49 @@ public class CombineManagerScript : MonoBehaviour
             {
                 ChickenCount++;
                 collider.transform.GetComponent<ChickenScript>().Die();
-                Destroy(collider.gameObject);
+            }
+
+            // 11TH LAYER IS PLAYER LAYE AND 15TH LAYER IS ENEMYCOMBINE LAYER
+            if (collider.gameObject.layer == 15 || collider.gameObject.layer == 11)
+            {
+                //collider.GetComponent<CombineManagerScript>().Die();
             }
         }
+    }
+
+
+    public void Die()
+    {
+        GameObject _BrokenCombine = Instantiate(BrokenCombine, transform.position, transform.rotation);
+
+
+        MeshRenderer[] brokenCombineRenderers = _BrokenCombine.GetComponentsInChildren<MeshRenderer>();
+        MeshRenderer[] thisCombineRenderers = GetComponentsInChildren<MeshRenderer>();
+
+        for (int i = 0; i < brokenCombineRenderers.Length; i++)
+        {
+
+            brokenCombineRenderers[i].materials = thisCombineRenderers[i].materials;
+
+        }
+
+        Destroy(_BrokenCombine, 3f);
+        Destroy(this.gameObject);
+
+        //BROKE CHICKENS
+        foreach(Transform _ChickenBox in ParentInstance.transform)
+        {
+            
+            GameObject _BrokenChickenBox = Instantiate(BrokenChickenBox, _ChickenBox.transform.position, Quaternion.identity);
+
+            MeshRenderer _BrokenChickenBoxRenderer = _ChickenBox.GetComponentInChildren<MeshRenderer>();
+            _BrokenChickenBoxRenderer.materials[0].color = CombineColor;
+            _BrokenChickenBoxRenderer.materials[1].color = CombineColor;
+            Destroy(_ChickenBox);
+            //spawn chickens
+        }
+
+
     }
 
     void ManageLevels()
