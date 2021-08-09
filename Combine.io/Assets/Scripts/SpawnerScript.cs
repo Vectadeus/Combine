@@ -40,16 +40,15 @@ public class SpawnerScript : MonoBehaviour
         for (int i = 0; i < ChickenAmount; i++)
         {
 
-            randomPos = centerPos + new Vector3(Random.Range(RandomRangePos.x, -RandomRangePos.x), 0.5f, Random.Range(RandomRangePos.z, -RandomRangePos.z));
+            randomPos = centerPos + new Vector3(Random.Range(RandomRangePos.x, -RandomRangePos.x), 5f, Random.Range(RandomRangePos.z, -RandomRangePos.z));
 
             RaycastHit[] rayHits;
 
             rayHits = Physics.RaycastAll(randomPos, Vector3.down, SpawnMask);
 
 
-            if (rayHits.Length >= 0)
+            if (rayHits.Length > 0)
             {
-                Debug.Log(rayHits.Length);
 
                 if (rayHits[0].transform.gameObject.layer == 13)
                 {

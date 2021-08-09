@@ -17,6 +17,7 @@ public class CombineManagerScript : MonoBehaviour
     [SerializeField] private GameObject ChickenBoxParent;
     [SerializeField] private bool ParentCreated;
     [SerializeField] Transform ChickenBoxPoint;
+    [SerializeField] Transform ChickenParent;
     private GameObject ParentInstance;
     private Color CombineColor;
 
@@ -29,13 +30,22 @@ public class CombineManagerScript : MonoBehaviour
     //DIE STUFF
     [SerializeField] private GameObject BrokenCombine;
     [SerializeField] private GameObject BrokenChickenBox;
-    private SpawnerScript spawnerscript;
+    [SerializeField] private GameObject ChickenPrefab;
+
+
+
     //Leveling stuff
+    public int Level;
+    [SerializeField] private int AmountForNextLevel = 10;
+    [SerializeField] private int ChickenCountForLevel;
+
+
+
 
 
     private void OnEnable()
     {
-        spawnerscript = FindObjectOfType<SpawnerScript>();
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -50,10 +60,18 @@ public class CombineManagerScript : MonoBehaviour
         ChickenBoxManage();
 
         //Die test
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
+        //    Die();
+        //}
+
+
+        //SCALING TEST
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Die();
+            transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
         }
+        ManageLevels();
     }
 
 
@@ -94,14 +112,26 @@ public class CombineManagerScript : MonoBehaviour
             {
                 ChickenCount++;
                 ChickenTotalCount++;
+                ChickenCountForLevel++;
                 collider.transform.GetComponent<ChickenScript>().Die();
+            }
+
+            // 16TH LAYER IS EATBOX LAYER
+            if(collider.gameObject.layer == 16)
+            {
+                if(collider.GetComponentInParent<CombineManagerScript>().Level < Level)
+                {
+                    //KILL
+                    collider.GetComponentInParent<CombineManagerScript>().Die();
+                }
             }
 
             // 11TH LAYER IS PLAYER LAYER AND 15TH LAYER IS ENEMYCOMBINE LAYER
             if (collider.gameObject.layer == 15 || collider.gameObject.layer == 11)
             {
-                //collider.GetComponent<CombineManagerScript>().Die();
+                collider.GetComponent<CombineManagerScript>().Die();
             }
+
         }
     }
 
@@ -110,6 +140,7 @@ public class CombineManagerScript : MonoBehaviour
     {
 
 
+        // თუ მოასწარი შეასწორე ის, რომ იმაზე მეტი ქათამი თავისუფლდება სიკვიდლის შემდეგ ვიდრე იყო
 
         //BROKE CHICKENS
         if(ParentInstance != null)
@@ -128,7 +159,14 @@ public class CombineManagerScript : MonoBehaviour
                 Destroy(_BrokenChickenBox, 3f);
                 Destroy(_ChickenBox.gameObject);
 
-                spawnerscript.ChickenSpawn(ChickenTotalCount, _ChickenBox.transform.position);
+                for (int i = 0; i < 5 + ChickenCount; i++)
+                {
+                    Vector3 _RandomPos = new Vector3(Random.Range(1f, 2f), 0.5f, Random.Range(1f, 2f));
+                    GameObject _Chicken = Instantiate(ChickenPrefab, _ChickenBox.transform.position + _RandomPos, Quaternion.identity);
+                    _Chicken.transform.SetParent(ChickenParent);
+
+                }
+
             }
         }
 
@@ -159,16 +197,22 @@ public class CombineManagerScript : MonoBehaviour
 
     void ManageLevels()
     {
-
+        if (ChickenCountForLevel >= AmountForNextLevel )
+        {
+            Level++;
+            AmountForNextLevel += 2;
+            transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
+            ChickenCountForLevel = 0;
+        }
     }
 
 
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.matrix = Matrix4x4.TRS(EatBoxCenter.position, transform.rotation, EatBoxSize);
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawCube(Vector3.zero, Vector3.one);
-    //}
+    private void OnDrawGizmos()
+    {
+        Gizmos.matrix = Matrix4x4.TRS(EatBoxCenter.position, transform.rotation, EatBoxSize);
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(Vector3.zero, Vector3.one);
+    }
 
 
 }//CLASS

@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     //WHEEL ROTATION STUFF
     [SerializeField] private Transform[] Wheels = new Transform[3];
     [SerializeField] private float WheelRotSpeed;
-
+    private float Gravity = 12;
 
 
     private void OnEnable()
@@ -66,7 +66,6 @@ public class PlayerMovement : MonoBehaviour
         if (_MoveDirection != Vector3.zero)
         {
             transform.forward = Vector3.Lerp(transform.forward, _MoveDirection, RotSpeed);
-
 
         }
         //Wheel rotation
