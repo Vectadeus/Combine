@@ -31,6 +31,12 @@ public class CombineManagerScript : MonoBehaviour
     [SerializeField] private GameObject BrokenCombine;
     [SerializeField] private GameObject BrokenChickenBox;
     [SerializeField] private GameObject ChickenPrefab;
+    [SerializeField] private SpawnerScript spawnerScript;
+
+
+    //RESPAWNING STUFF
+    [SerializeField] private Vector3 RandomRespawnPos;
+    [SerializeField] private LayerMask SpawnMask;
 
 
 
@@ -45,12 +51,12 @@ public class CombineManagerScript : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        spawnerScript = FindObjectOfType<SpawnerScript>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        spawnerScript = FindObjectOfType<SpawnerScript>();
     }
 
     // Update is called once per frame
@@ -60,17 +66,16 @@ public class CombineManagerScript : MonoBehaviour
         ChickenBoxManage();
 
         //Die test
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    Die();
-        //}
-
-
-        //SCALING TEST
         if (Input.GetKeyDown(KeyCode.T))
         {
-            transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
+            Die();
         }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Die();
+        }
+
         ManageLevels();
     }
 
@@ -117,7 +122,7 @@ public class CombineManagerScript : MonoBehaviour
             }
 
             // 16TH LAYER IS EATBOX LAYER
-            if(collider.gameObject.layer == 16)
+            if(collider.gameObject.layer == 16 && collider.GetComponentInParent<CombineManagerScript>() != this)
             {
                 if(collider.GetComponentInParent<CombineManagerScript>().Level < Level)
                 {
@@ -138,12 +143,11 @@ public class CombineManagerScript : MonoBehaviour
 
     public void Die()
     {
-
-
+        GetComponent<BoxCollider>().enabled = false;
         // თუ მოასწარი შეასწორე ის, რომ იმაზე მეტი ქათამი თავისუფლდება სიკვიდლის შემდეგ ვიდრე იყო
 
         //BROKE CHICKENS
-        if(ParentInstance != null)
+        if (ParentInstance != null)
         {
             foreach (Transform _ChickenBox in ParentInstance.transform)
             {
@@ -163,6 +167,7 @@ public class CombineManagerScript : MonoBehaviour
                 {
                     Vector3 _RandomPos = new Vector3(Random.Range(1f, 2f), 0.5f, Random.Range(1f, 2f));
                     GameObject _Chicken = Instantiate(ChickenPrefab, _ChickenBox.transform.position + _RandomPos, Quaternion.identity);
+
                     _Chicken.transform.SetParent(ChickenParent);
 
                 }
@@ -174,8 +179,16 @@ public class CombineManagerScript : MonoBehaviour
 
 
 
-
+        
         GameObject _BrokenCombine = Instantiate(BrokenCombine, transform.position, transform.rotation);
+
+
+
+        Rigidbody[] _Rigidbodies = _BrokenCombine.GetComponentsInChildren<Rigidbody>();
+        foreach(Rigidbody rig in _Rigidbodies)
+        {
+            rig.velocity = Vector3.zero;
+        }
 
 
         MeshRenderer[] brokenCombineRenderers = _BrokenCombine.GetComponentsInChildren<MeshRenderer>();
@@ -187,13 +200,52 @@ public class CombineManagerScript : MonoBehaviour
             brokenCombineRenderers[i].materials = thisCombineRenderers[i].materials;
 
         }
-
+        
         Destroy(_BrokenCombine, 3f);
-        Destroy(this.gameObject);
 
 
+
+
+        //RESPAWNING STUFF
+        GameObject _combineChild = GetComponentInChildren<Animator>().gameObject;
+        _combineChild.SetActive(false);
+        StartCoroutine(Respawn(_combineChild));
+
+        findRandomPos();
 
     }
+
+    void findRandomPos()
+    {
+        Vector3 _RespawnPos = transform.position + new Vector3(Random.Range(RandomRespawnPos.x, -RandomRespawnPos.x), 5f, Random.Range(RandomRespawnPos.z, -RandomRespawnPos.z));
+        RaycastHit[] rayHits;
+
+        rayHits = Physics.RaycastAll(_RespawnPos, Vector3.down, SpawnMask);
+
+        if (rayHits.Length > 0)
+        {
+
+            if (rayHits[0].transform.gameObject.layer == 13)
+            {
+                transform.position = new Vector3(_RespawnPos.x , 0f, _RespawnPos.z);
+
+            }
+            else
+            {
+                findRandomPos();
+            }
+        }
+    }
+
+    IEnumerator Respawn(GameObject _object)
+    {
+        yield return new WaitForSeconds(4f);
+        _object.SetActive(true);
+        GetComponent<BoxCollider>().enabled = true;
+    }
+
+
+
 
     void ManageLevels()
     {
