@@ -20,7 +20,10 @@ public class CombineManagerScript : MonoBehaviour
     [SerializeField] Transform ChickenParent;
     private GameObject ParentInstance;
     private Color CombineColor;
-
+    private bool isAlive;
+    private PlayerMovement playerMovement;
+    private EnemyCombineMovement enemyCombineMovement;
+    private Rigidbody rb;
 
     //EAT STUFF
     [SerializeField] private Transform EatBoxCenter;
@@ -32,7 +35,7 @@ public class CombineManagerScript : MonoBehaviour
     [SerializeField] private GameObject BrokenChickenBox;
     [SerializeField] private GameObject ChickenPrefab;
     [SerializeField] private SpawnerScript spawnerScript;
-
+    
 
     //RESPAWNING STUFF
     [SerializeField] private Vector3 RandomRespawnPos;
@@ -42,6 +45,7 @@ public class CombineManagerScript : MonoBehaviour
 
     //Leveling stuff
     public int Level;
+    [SerializeField] private int MaxLevel;
     [SerializeField] private int AmountForNextLevel = 10;
     [SerializeField] private int ChickenCountForLevel;
 
@@ -51,7 +55,11 @@ public class CombineManagerScript : MonoBehaviour
 
     private void OnEnable()
     {
+        rb = GetComponent<Rigidbody>();
         spawnerScript = FindObjectOfType<SpawnerScript>();
+        playerMovement = GetComponent<PlayerMovement>();
+        enemyCombineMovement = GetComponent<EnemyCombineMovement>();
+        isAlive = true;
     }
     // Start is called before the first frame update
     void Start()
@@ -62,20 +70,11 @@ public class CombineManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CombineEat();
-        ChickenBoxManage();
-
-        //Die test
-        if (Input.GetKeyDown(KeyCode.T))
+        if (isAlive)
         {
-            Die();
+            CombineEat();
+            ChickenBoxManage();
         }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Die();
-        }
-
         ManageLevels();
     }
 
@@ -126,7 +125,7 @@ public class CombineManagerScript : MonoBehaviour
             {
                 if(collider.GetComponentInParent<CombineManagerScript>().Level < Level)
                 {
-                    //KILL
+                    //KILL                    
                     collider.GetComponentInParent<CombineManagerScript>().Die();
                 }
             }
@@ -141,12 +140,10 @@ public class CombineManagerScript : MonoBehaviour
     }
 
 
-    public void Die()
-    {
-        GetComponent<BoxCollider>().enabled = false;
-        // თუ მოასწარი შეასწორე ის, რომ იმაზე მეტი ქათამი თავისუფლდება სიკვიდლის შემდეგ ვიდრე იყო
 
-        //BROKE CHICKENS
+
+    private void ChickenFree()
+    {
         if (ParentInstance != null)
         {
             foreach (Transform _ChickenBox in ParentInstance.transform)
@@ -175,17 +172,16 @@ public class CombineManagerScript : MonoBehaviour
             }
         }
 
+    }
 
-
-
-
-        
+    private void BrakeCombine()
+    {
         GameObject _BrokenCombine = Instantiate(BrokenCombine, transform.position, transform.rotation);
 
 
 
         Rigidbody[] _Rigidbodies = _BrokenCombine.GetComponentsInChildren<Rigidbody>();
-        foreach(Rigidbody rig in _Rigidbodies)
+        foreach (Rigidbody rig in _Rigidbodies)
         {
             rig.velocity = Vector3.zero;
         }
@@ -200,9 +196,14 @@ public class CombineManagerScript : MonoBehaviour
             brokenCombineRenderers[i].materials = thisCombineRenderers[i].materials;
 
         }
-        
-        Destroy(_BrokenCombine, 3f);
 
+        Destroy(_BrokenCombine, 3f);
+    }
+    public void Die()
+    {
+        GetComponent<BoxCollider>().enabled = false;
+        ChickenFree();
+        BrakeCombine();
 
 
 
@@ -213,7 +214,29 @@ public class CombineManagerScript : MonoBehaviour
 
         findRandomPos();
 
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
+        else
+        {
+            enemyCombineMovement.enabled = false;
+        }
+
+        rb.isKinematic = true;
+        isAlive = false;
+
     }
+
+
+
+
+
+
+
+
+
+
 
     void findRandomPos()
     {
@@ -242,6 +265,24 @@ public class CombineManagerScript : MonoBehaviour
         yield return new WaitForSeconds(4f);
         _object.SetActive(true);
         GetComponent<BoxCollider>().enabled = true;
+        isAlive = true;
+        AmountForNextLevel = default;
+        ChickenCountForLevel = default;
+        Level = default;
+        transform.localScale = new Vector3(1,1,1);
+        ChickenCount = default;
+
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = true;
+        }
+        else
+        {
+            enemyCombineMovement.enabled = true;
+        }
+        rb.isKinematic = false;
+
     }
 
 
@@ -249,7 +290,7 @@ public class CombineManagerScript : MonoBehaviour
 
     void ManageLevels()
     {
-        if (ChickenCountForLevel >= AmountForNextLevel )
+        if (ChickenCountForLevel >= AmountForNextLevel && Level < MaxLevel)
         {
             Level++;
             AmountForNextLevel += 2;

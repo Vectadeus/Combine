@@ -13255,8 +13255,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.28021184, y: 0.32512167, z: 0.014533121}
-  m_Center: {x: -0.024496198, y: -0.011567655, z: -0.0072665606}
+  m_Size: {x: 0.2802118, y: 0.32512167, z: 0.013652174}
+  m_Center: {x: -0.024496203, y: -0.011567658, z: -0.0077070347}
 --- !u!1001 &291634268
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59111,7 +59111,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 004318c0bd3099e4c9c41bde651f3a30,
         type: 3}
       propertyPath: m_Name
-      value: ground_1
+      value: GreenGround
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 004318c0bd3099e4c9c41bde651f3a30,
         type: 3}
@@ -76366,7 +76366,7 @@ MonoBehaviour:
   Chicken: {fileID: 7505670099453684578, guid: a0aefcb263359dc4f95103d98862af0f, type: 3}
   ChickenParent: {fileID: 394776967}
   RandomRangePos: {x: 50, y: 0, z: 50}
-  AmountOfChicken: 0
+  AmountOfChicken: 300
   SpawnMask:
     serializedVersion: 2
     m_Bits: 9216
@@ -86705,7 +86705,7 @@ PrefabInstance:
     - target: {fileID: 2476473153680619419, guid: bd15b41246f59a44f85543e2534a72b2,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3443517695577509514, guid: bd15b41246f59a44f85543e2534a72b2,
         type: 3}
@@ -86716,6 +86716,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029853788585718230, guid: bd15b41246f59a44f85543e2534a72b2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
       objectReference: {fileID: 0}
     - target: {fileID: 4918676640517217616, guid: bd15b41246f59a44f85543e2534a72b2,
         type: 3}
@@ -86751,6 +86756,11 @@ PrefabInstance:
         type: 3}
       propertyPath: SpawnMask.m_Bits
       value: 8192
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089380620139564090, guid: bd15b41246f59a44f85543e2534a72b2,
+        type: 3}
+      propertyPath: EatBoxSize.y
+      value: 2.02
       objectReference: {fileID: 0}
     - target: {fileID: 6132322187135371230, guid: bd15b41246f59a44f85543e2534a72b2,
         type: 3}
@@ -86874,10 +86884,15 @@ PrefabInstance:
       propertyPath: ChickenParent
       value: 
       objectReference: {fileID: 394776968}
+    - target: {fileID: 3682721742608027955, guid: 31afa1db7e5084d43bf03488c3a9c89c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
+      objectReference: {fileID: 0}
     - target: {fileID: 4685688069386990970, guid: 31afa1db7e5084d43bf03488c3a9c89c,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4983185753636769536, guid: 31afa1db7e5084d43bf03488c3a9c89c,
         type: 3}
@@ -86968,6 +86983,11 @@ PrefabInstance:
         type: 3}
       propertyPath: SpawnMask.m_Bits
       value: 8192
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995461848676006609, guid: 31afa1db7e5084d43bf03488c3a9c89c,
+        type: 3}
+      propertyPath: EatBoxSize.y
+      value: 2.02
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4341434495181934465, guid: 31afa1db7e5084d43bf03488c3a9c89c, type: 3}
@@ -87086,6 +87106,11 @@ PrefabInstance:
       propertyPath: SpawnMask.m_Bits
       value: 8192
       objectReference: {fileID: 0}
+    - target: {fileID: 5072144708774723456, guid: 82c9474d3169c2d4a8317180f6485fba,
+        type: 3}
+      propertyPath: EatBoxSize.y
+      value: 2.02
+      objectReference: {fileID: 0}
     - target: {fileID: 6512246668068856328, guid: 82c9474d3169c2d4a8317180f6485fba,
         type: 3}
       propertyPath: m_Layer
@@ -87094,7 +87119,12 @@ PrefabInstance:
     - target: {fileID: 8651829058076774605, guid: 82c9474d3169c2d4a8317180f6485fba,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949227562517020743, guid: 82c9474d3169c2d4a8317180f6485fba,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6456729006282103620, guid: 82c9474d3169c2d4a8317180f6485fba, type: 3}
@@ -87121,7 +87151,7 @@ PrefabInstance:
     - target: {fileID: 2746191480258676368, guid: c6c62c43ee6d8d642bd08ad1e7b5a778,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2746191480258676370, guid: c6c62c43ee6d8d642bd08ad1e7b5a778,
         type: 3}
@@ -87218,10 +87248,20 @@ PrefabInstance:
       propertyPath: SpawnMask.m_Bits
       value: 8192
       objectReference: {fileID: 0}
+    - target: {fileID: 2746191480258676373, guid: c6c62c43ee6d8d642bd08ad1e7b5a778,
+        type: 3}
+      propertyPath: EatBoxSize.y
+      value: 2.02
+      objectReference: {fileID: 0}
     - target: {fileID: 3412894136344945058, guid: c6c62c43ee6d8d642bd08ad1e7b5a778,
         type: 3}
       propertyPath: m_Layer
       value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3412894136344945059, guid: c6c62c43ee6d8d642bd08ad1e7b5a778,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
       objectReference: {fileID: 0}
     - target: {fileID: 4022903513259631177, guid: c6c62c43ee6d8d642bd08ad1e7b5a778,
         type: 3}
@@ -87244,6 +87284,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerIn
+      objectReference: {fileID: 0}
+    - target: {fileID: 7140453952805040580, guid: 69e1f6b909cf75f4498bdd8291f482d2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
       objectReference: {fileID: 0}
     - target: {fileID: 7662481906405283568, guid: 69e1f6b909cf75f4498bdd8291f482d2,
         type: 3}
@@ -87294,6 +87339,11 @@ PrefabInstance:
         type: 3}
       propertyPath: SpawnMask.m_Bits
       value: 8192
+      objectReference: {fileID: 0}
+    - target: {fileID: 7662481906405283570, guid: 69e1f6b909cf75f4498bdd8291f482d2,
+        type: 3}
+      propertyPath: EatBoxSize.y
+      value: 2.02
       objectReference: {fileID: 0}
     - target: {fileID: 7662481906405283572, guid: 69e1f6b909cf75f4498bdd8291f482d2,
         type: 3}

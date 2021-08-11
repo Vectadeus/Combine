@@ -142,13 +142,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChickenSpeed: 3
   RotSpeed: 0.2
-  RandomDirection: {x: 0, y: 0, z: 0}
   Particles: {fileID: 3991734614078032579, guid: 0a7e53fef16c70849ba888d23e61cac0,
     type: 3}
   SphereRadius: 1
   ObstacleMask:
     serializedVersion: 2
     m_Bits: 6144
+  SpawnMask:
+    serializedVersion: 2
+    m_Bits: 8192
+  rayOffset: {x: 0, y: 0.5, z: 0}
 --- !u!54 &1251824902
 Rigidbody:
   m_ObjectHideFlags: 0
