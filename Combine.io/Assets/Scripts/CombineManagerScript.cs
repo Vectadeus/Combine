@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using TMPro;
 using UnityEngine;
 
 public class CombineManagerScript : MonoBehaviour
@@ -51,6 +53,13 @@ public class CombineManagerScript : MonoBehaviour
 
 
 
+    //LEVELBAR STUFF
+    [SerializeField] private Image levelBar;
+    [SerializeField] private RectTransform levelBarParent;
+    [SerializeField] private Transform camTransform;
+    [SerializeField] private TextMeshProUGUI levelBarText;
+
+
 
 
     private void OnEnable()
@@ -59,6 +68,7 @@ public class CombineManagerScript : MonoBehaviour
         spawnerScript = FindObjectOfType<SpawnerScript>();
         playerMovement = GetComponent<PlayerMovement>();
         enemyCombineMovement = GetComponent<EnemyCombineMovement>();
+        camTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
         isAlive = true;
     }
     // Start is called before the first frame update
@@ -76,7 +86,41 @@ public class CombineManagerScript : MonoBehaviour
             ChickenBoxManage();
         }
         ManageLevels();
+        ShowLevelBar();
+
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Debug.Log(ChickenParent.childCount);
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Die();
+        }
     }
+
+
+
+    private void ShowLevelBar()
+    {
+        float levelBarRatio = (float)ChickenCountForLevel / (float)AmountForNextLevel;
+        levelBar.fillAmount = levelBarRatio;
+        levelBarParent.rotation = camTransform.transform.rotation;
+        levelBarText.text = ((float)ChickenTotalCount / (float)ChickenParent.childCount * 100).ToString();
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -138,10 +182,6 @@ public class CombineManagerScript : MonoBehaviour
 
         }
     }
-
-
-
-
     private void ChickenFree()
     {
         if (ParentInstance != null)
@@ -228,16 +268,6 @@ public class CombineManagerScript : MonoBehaviour
 
     }
 
-
-
-
-
-
-
-
-
-
-
     void findRandomPos()
     {
         Vector3 _RespawnPos = transform.position + new Vector3(Random.Range(RandomRespawnPos.x, -RandomRespawnPos.x), 5f, Random.Range(RandomRespawnPos.z, -RandomRespawnPos.z));
@@ -259,7 +289,6 @@ public class CombineManagerScript : MonoBehaviour
             }
         }
     }
-
     IEnumerator Respawn(GameObject _object)
     {
         yield return new WaitForSeconds(4f);
@@ -285,19 +314,24 @@ public class CombineManagerScript : MonoBehaviour
 
     }
 
-
-
-
     void ManageLevels()
     {
         if (ChickenCountForLevel >= AmountForNextLevel && Level < MaxLevel)
         {
             Level++;
-            AmountForNextLevel += 2;
+            AmountForNextLevel += 4;
             transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
             ChickenCountForLevel = 0;
         }
     }
+
+
+
+
+
+
+
+
 
 
     private void OnDrawGizmos()

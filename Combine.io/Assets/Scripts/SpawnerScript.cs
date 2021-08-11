@@ -40,10 +40,6 @@ public class SpawnerScript : MonoBehaviour
     {
     }
 
-    public void TEST()
-    {
-        Debug.Log("TESTESTESTESTEST");
-    }
     public void ChickenSpawn(int _ChickenAmount , Vector3 centerPos)
     {
         ChickenAmount = _ChickenAmount;
@@ -75,7 +71,7 @@ public class SpawnerScript : MonoBehaviour
                     }
                 }
             }
-
+            Debug.Log(rayHits.Length);
             
         }
 
